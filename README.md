@@ -1,4 +1,6 @@
 
+This is a prototype. Please wait until basic implementation done.
+
 # Qithub CLI Client
 
 `qithub.phar` is a single PHP command line application that calls Qithub API and returns the result.
