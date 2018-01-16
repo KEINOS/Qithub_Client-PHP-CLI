@@ -23,9 +23,9 @@ $
 If you place the `qithub.phar` file under `/usr/local/bin/qithub` with 0755, you can run it as below.
 
 ```
-$ php qithub roll-dice 3d5
+$ qithub roll-dice 3d5
 14
-$ php qithub roll-dice --help
+$ qithub roll-dice --help
 This is a help of `roll-dice` plugin.
 $
 ```
