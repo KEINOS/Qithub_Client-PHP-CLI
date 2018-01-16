@@ -1,0 +1,86 @@
+<?php
+/**
+ * Common functions.
+ * =====================================================================
+ * @author KEINOS
+ * @version 20180116
+*/
+
+function is_mode_cli()
+{
+    $name_sapi = strtolower(php_sapi_name());
+
+    return ( 'cli' === substr($name_sapi, 0, 3) );
+}
+
+function print_pretty($contents, $title = '', $return = false)
+{
+    $title    = (string) trim($title);
+    $contents = is_string($contents) ? $contents : print_r($contents, true);
+
+    $has_title = (empty($title)) ? NO : YES;
+
+    if (YES == $has_title) {
+        if (is_mode_cli()) {
+            $title = PHP_EOL . HR . $title . PHP_EOL . HR;
+        } else {
+            $title = htmlspecialchars($contents);
+            $title = "<div style='font-weight:strong'>${title}</div>";
+        }
+        $contents = indent_string($contents);
+    } else {
+        $title    = '';
+        $contents = $contents . PHP_EOL;
+    }
+
+    $result  = '';
+    $result .= $title;
+    $result .= $contents;
+
+    if ($return) {
+        return $result;
+    } else {
+        echo $result;
+    }
+}
+
+function indent_string($string)
+{
+    $result = '';
+    if (is_mode_cli()) {
+        $lines = explode(PHP_EOL, $string);
+        foreach ($lines as $line) {
+            $line = trim($line);
+            $result .= INDENT . $line . PHP_EOL;
+        }
+    } else {
+        $result = "<div style='padding-left:4em'>${string}</div>";
+    }
+
+    return $result;
+}
+
+function touch_dir($path_dir)
+{
+    $mod = 0777;
+    if (@mkdir($path_dir, $mod, true) && chmod($path_dir, $mod)) {
+        return realpath($path_dir);
+    } else {
+        die("Error making dir at: ${path_dir_bin}");
+    }
+}
+
+/**
+ * dir_exists function.
+ * ---------------------------------------------------------------------
+ *
+ * is_dir()の語感互換関数
+ *
+ * @access public
+ * @param  string $path_dir
+ * @return bool
+ */
+function dir_exists($path_dir)
+{
+    return is_dir((string) $path_dir);
+}
