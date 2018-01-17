@@ -71,6 +71,32 @@ function touch_dir($path_dir)
 }
 
 /**
+ * set_env_utf8_ja function.
+ * ---------------------------------------------------------------------
+ *
+ * 実行環境の言語を日本語に設定しタイムゾーンを設定する
+ *
+ * @access public
+ * @param string $timezone (default: 'Asia/Tokyo')
+ * @return void
+ * @SuppressWarnings(PHPMD)
+ */
+function set_env_utf8_ja($timezone = 'Asia/Tokyo')
+{
+    if (! function_exists('mb_language')) {
+        die('This application requires mb_language.');
+    }
+
+    date_default_timezone_set($timezone);
+    setlocale(LC_ALL, 'ja_JP');
+    mb_language('ja');
+    mb_internal_encoding('UTF-8');
+    mb_http_output('UTF-8');
+    ob_start("mb_output_handler");
+}
+
+
+/**
  * dir_exists function.
  * ---------------------------------------------------------------------
  *
