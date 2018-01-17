@@ -7,7 +7,7 @@ This is a prototype. Please wait until basic implementation done.
 
 ## Install
 
-Just donwload `qithub.phar` and run with arguments.
+Just [donwload `qithub.phar`](https://github.com/KEINOS/Qithub_Client-PHP-CLI/raw/master/qithub.phar) and run with arguments.
 
 
 ## Basic usage
