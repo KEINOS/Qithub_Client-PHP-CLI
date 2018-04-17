@@ -44,7 +44,12 @@ function is_mode_cli()
 function print_pretty($contents, $title = '', $return = false)
 {
     $title    = (string) trim($title);
-    $contents = is_string($contents) ? $contents : print_r($contents, true);
+
+    if(! is_string($contents)){
+        $contents = print_r($contents, true);
+    }else{
+        $contents = (string) $contents;
+    }
 
     $has_title = (empty($title)) ? NO : YES;
 
