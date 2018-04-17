@@ -11,12 +11,9 @@
 require_once('./constants.php.inc');
 require_once('./functions.php.inc');
 
-if (! is_mode_cli()) {
-    set_env_utf8_ja();
-    header('Content-Type: text/plain; charset=utf-8', true, 500);
-    echo 'Please execute it via php-cli.' . PHP_EOL;
-    die;
-}
+set_env_utf8_ja();
+
+die_if_web();
 
 // Get args from CLI
 if (isset($argv[1])&& ! empty($argv[1])) {
