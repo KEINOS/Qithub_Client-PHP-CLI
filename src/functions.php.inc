@@ -3,8 +3,34 @@
  * Common functions.
  * =====================================================================
  * @author KEINOS
- * @version 20180116
+ * @version 20180417
 */
+
+/* -------------------------------------------------------------- [D] */
+
+function dir_exists($path_dir)
+{
+    return is_dir((string) $path_dir);
+}
+
+
+/* -------------------------------------------------------------- [I] */
+
+function indent_string($string)
+{
+    $result = '';
+    if (is_mode_cli()) {
+        $lines = explode(PHP_EOL, $string);
+        foreach ($lines as $line) {
+            $line = trim($line);
+            $result .= INDENT . $line . PHP_EOL;
+        }
+    } else {
+        $result = "<div style='padding-left:4em'>${string}</div>";
+    }
+
+    return $result;
+}
 
 function is_mode_cli()
 {
@@ -12,6 +38,8 @@ function is_mode_cli()
 
     return ( 'cli' === substr($name_sapi, 0, 3) );
 }
+
+/* -------------------------------------------------------------- [P] */
 
 function print_pretty($contents, $title = '', $return = false)
 {
@@ -44,43 +72,8 @@ function print_pretty($contents, $title = '', $return = false)
     }
 }
 
-function indent_string($string)
-{
-    $result = '';
-    if (is_mode_cli()) {
-        $lines = explode(PHP_EOL, $string);
-        foreach ($lines as $line) {
-            $line = trim($line);
-            $result .= INDENT . $line . PHP_EOL;
-        }
-    } else {
-        $result = "<div style='padding-left:4em'>${string}</div>";
-    }
+/* -------------------------------------------------------------- [S] */
 
-    return $result;
-}
-
-function touch_dir($path_dir)
-{
-    $mod = 0777;
-    if (@mkdir($path_dir, $mod, true) && chmod($path_dir, $mod)) {
-        return realpath($path_dir);
-    } else {
-        die("Error making dir at: ${path_dir_bin}");
-    }
-}
-
-/**
- * set_env_utf8_ja function.
- * ---------------------------------------------------------------------
- *
- * 実行環境の言語を日本語に設定しタイムゾーンを設定する
- *
- * @access public
- * @param string $timezone (default: 'Asia/Tokyo')
- * @return void
- * @SuppressWarnings(PHPMD)
- */
 function set_env_utf8_ja($timezone = 'Asia/Tokyo')
 {
     if (! function_exists('mb_language')) {
@@ -95,18 +88,15 @@ function set_env_utf8_ja($timezone = 'Asia/Tokyo')
     ob_start("mb_output_handler");
 }
 
+/* -------------------------------------------------------------- [T] */
 
-/**
- * dir_exists function.
- * ---------------------------------------------------------------------
- *
- * is_dir()の語感互換関数
- *
- * @access public
- * @param  string $path_dir
- * @return bool
- */
-function dir_exists($path_dir)
+function touch_dir($path_dir)
 {
-    return is_dir((string) $path_dir);
+    $mod = 0777;
+    if (@mkdir($path_dir, $mod, true) && chmod($path_dir, $mod)) {
+        return realpath($path_dir);
+    } else {
+        die("Error making dir at: ${path_dir_bin}");
+    }
 }
+
