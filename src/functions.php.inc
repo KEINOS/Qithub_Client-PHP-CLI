@@ -8,21 +8,95 @@
 
 /* -------------------------------------------------------------- [D] */
 
+function die_if_web()
+{
+    if (! is_cli()) {
+        header('Content-Type: text/plain; charset=utf-8', true, 500);
+        die('This script must be run via command line.');
+    }
+}
+
+/* -------------------------------------------------------------- [D] */
+
 function dir_exists($path_dir)
 {
     return is_dir((string) $path_dir);
 }
 
+/* -------------------------------------------------------------- [E] */
+
+function echo_eol($string)
+{
+    echo PHP_EOL, $string, PHP_EOL;
+}
+
+function echo_hr($string = '-', $return = false)
+{
+    if (! defined('HR')) {
+        $width = get_screen_width();
+        $hr    = str_repeat($string, $width);
+        define('HR', $hr);
+    }
+
+    if ($return) {
+        return HR . PHP_EOL;
+    }
+
+    echo HR . PHP_EOL;
+}
+
+/* -------------------------------------------------------------- [G] */
+
+function get_screen_width()
+{
+    $default_width = 70; //デフォルト幅
+
+    if (! defined('SCREEN_WIDTH')) {
+        if (! is_cli()) {
+            $msg = 'This script must be run via command line.';
+            die($msg);
+        }
+
+        $width = trim(`tput cols`); //バッククォートであることに注意
+        $width = is_numeric($width) ? $width : $default_width;
+        define('SCREEN_WIDTH', $width);
+    }
+
+    return SCREEN_WIDTH;
+}
+
+/* -------------------------------------------------------------- [F] */
+
+function format_title($title, $width_indent = 0)
+{
+    $title  = trim((string) $title);
+    $result = '';
+    $indent = '';
+
+    if ($width_indent) {
+        $width  = get_screen_width() - $width_indent;
+        $hr     = str_repeat('-', $width) . PHP_EOL;
+        $indent = str_repeat(' ', $width_indent);
+    } else {
+        $hr = echo_hr('-', DO_NOT_ECHO);
+    }
+
+    $result .= $indent . $hr;
+    $result .= $indent . '  ' . $title . PHP_EOL;
+    $result .= $indent . $hr;
+
+    return $result;
+}
 
 /* -------------------------------------------------------------- [I] */
 
 function indent_string($string)
 {
-    $result = '';
-    if (is_mode_cli()) {
-        $lines = explode(PHP_EOL, $string);
+    if (is_cli()) {
+        $result = '';
+        $lines  = explode(PHP_EOL, $string);
         foreach ($lines as $line) {
-            $line = trim($line);
+            $line    = trim($line);
             $result .= INDENT . $line . PHP_EOL;
         }
     } else {
@@ -32,7 +106,7 @@ function indent_string($string)
     return $result;
 }
 
-function is_mode_cli()
+function is_cli()
 {
     $name_sapi = strtolower(php_sapi_name());
 
@@ -45,22 +119,17 @@ function print_pretty($contents, $title = '', $return = false)
 {
     $title    = (string) trim($title);
 
-    if(! is_string($contents)){
+    if (! is_string($contents)) {
         $contents = print_r($contents, true);
-    }else{
+    } else {
         $contents = (string) $contents;
     }
 
     $has_title = (empty($title)) ? NO : YES;
 
-    if (YES == $has_title) {
-        if (is_mode_cli()) {
-            $title = PHP_EOL . HR . $title . PHP_EOL . HR;
-        } else {
-            $title = htmlspecialchars($contents);
-            $title = "<div style='font-weight:strong'>${title}</div>";
-        }
-        $contents = indent_string($contents);
+    if ($has_title === YES) {
+        $title    = format_title($title) . PHP_EOL;
+        $contents = indent_string($contents) . PHP_EOL;
     } else {
         $title    = '';
         $contents = $contents . PHP_EOL;
@@ -104,4 +173,3 @@ function touch_dir($path_dir)
         die("Error making dir at: ${path_dir_bin}");
     }
 }
-
