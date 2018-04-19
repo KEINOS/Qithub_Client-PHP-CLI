@@ -369,6 +369,8 @@ function print_pretty($option)
 
 function request_user_confirm($question, $confirm_key)
 {
+    $confirm_list = explode(' ', $confirm_key);
+
     while (true) {
         echo_same_line(' ');
         echo CR;
@@ -376,7 +378,9 @@ function request_user_confirm($question, $confirm_key)
         _flush();
         $input = trim(fgets(STDIN));
         echo CR, CU;
-        return ($confirm_key == $input);
+        if( array_search($input, $confirm_list) ){
+            return ($confirm_key == $input);            
+        }
     }
 }
 
