@@ -11,21 +11,42 @@
 require_once('./constants.php.inc');
 require_once('./functions.php.inc');
 
-set_env_utf8_ja();
 
-die_if_web();
+initialize_app();
 
-// Get args from CLI
-if (isset($argv[1])&& ! empty($argv[1])) {
-    $argv_tmp    = $argv;
-    $plugin_name = trim($argv_tmp[1]);
-    unset($argv_tmp[0]); // unset script name
-    unset($argv_tmp[1]); // unset 1st argument
-    $plugin_args = implode(' ', $argv_tmp); // Glue the rest args.
-} else {
-    $plugin_name = 'help';
-    $plugin_args = '';
+/*
+$i = 0;
+while(true){
+    move_up( $i . ' say hello world hogehoge hoge ');
+    $i++;
 }
+*/
+
+while (true) {
+    $option_raw = fetch_toot_cmd();
+    $option_enc = encode_qithub($option_raw);
+
+    print_pretty([
+        'contents' => $option_raw,
+        'title'    => 'Command in Array',
+    ]);
+    print_pretty([
+        'contents' => json_encode($option_raw, JSON_PRETTY_PRINT),
+        'title'    => 'Command in JSON',
+    ]);
+    print_pretty([
+        'contents' => $option_enc,
+        'title'    => 'Qithub encoded'
+    ]);
+    
+    echo_hr();
+    pause_next();
+
+    //ヘッダを１行上の先頭に移動
+    //echo("\r\33[1A");
+}
+
+die;
 
 // Qithub API Endpoint
 $url_endpoint = 'https://blog.keinos.com/qithub_dev/';
