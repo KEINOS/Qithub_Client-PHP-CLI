@@ -1,7 +1,17 @@
 <?php
-class Test extends PHPUnit_Framework_TestCase
+
+require_once 'PHPUnit/Framework.php';
+
+class Qithub_CLI_Test extends PHPUnit_Framework_TestCase
 {
-    public function testOnePlusOne() {
-        $this->assertEquals(1+1,2);
+    public function setUp()
+    {
+        // テスト前の初期化
+        // $this->employee = new Employee;
+    }
+
+    public function testFunction()
+    {
+        $this->assertTrue(true);
     }
 }
